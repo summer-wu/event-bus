@@ -1,3 +1,6 @@
+# what changed
++ add remove_event_withFuncName
+
 # Event Bus
 <a href="https://travis-ci.org/seanpar203/event-bus"><img src="https://travis-ci.org/seanpar203/event-bus.svg?branch=master" alt="Build Status"></a>
 
