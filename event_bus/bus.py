@@ -172,7 +172,7 @@ class EventBus:
 
         return outer
 
-    def remove_event(self, func_name: str, event: str) -> None:
+    def remove_event_withFuncName(self, func_name: str, event: str) -> None:
         """ Removes a subscribed function from a specific event.
 
         :param func_name: The name of the function to be removed.
@@ -190,7 +190,21 @@ class EventBus:
                 event_funcs_copy.remove(func)
 
         if self._events[event] == event_funcs_copy:
-            err_msg = "function doesn't exist inside event {} ".format(event)
+            err_msg = "func_name {} doesn't exist inside event {} ".format(func_name,event)
+            raise EventDoesntExist(err_msg)
+        else:
+            self._events[event] = event_funcs_copy
+
+    def remove_event_sameFunc(self, func:Callable, event:str)->None:
+        """remove event with same func used in add_event"""
+        event_funcs_copy = self._events[event].copy()
+
+        for func in self._event_funcs(event):
+            if func == func:
+                event_funcs_copy.remove(func)
+
+        if self._events[event] == event_funcs_copy:
+            err_msg = "func {} doesn't exist inside event {} ".format(str(func),event)
             raise EventDoesntExist(err_msg)
         else:
             self._events[event] = event_funcs_copy
