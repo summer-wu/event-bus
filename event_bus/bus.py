@@ -196,11 +196,19 @@ class EventBus:
             self._events[event] = event_funcs_copy
 
     def remove_event_sameFunc(self, func:Callable, event:str)->None:
-        """remove event with same func used in add_event"""
-        event_funcs_copy = self._events[event].copy()
+        """remove event with same func used in add_event
+        boundMethod's id will change, so compare with properties"""
 
-        for func in self._event_funcs(event):
-            if func == func:
+        assert isinstance(func,Callable),"need Callable!"
+        event_funcs_copy = self._events[event].copy()
+        func_type = str(type(func))
+        if func_type == 'method':
+            compareLambda = lambda ifunc,f:str(type(ifunc))=='method' and ifunc.__self__==f.__self__ and ifunc.__name__==f.__name__
+        else: #function
+            compareLambda = lambda ifunc,f:ifunc==f
+
+        for ifunc in self._event_funcs(event):
+            if compareLambda(ifunc,func):
                 event_funcs_copy.remove(func)
 
         if self._events[event] == event_funcs_copy:
